@@ -1,0 +1,17 @@
+{
+  "transaction_id": 999,
+  "amount_mxn": 5200,
+  "customer_txn_30d": 1,
+  "geo_state": "Nuevo León",
+  "device_type": "mobile",
+  "chargeback_count": 0,
+  "hour": 23,
+  "product_type": "digital",
+  "latency_ms": 180,
+  "user_reputation": "new",
+  "device_fingerprint_risk": "low",
+  "ip_risk": "medium",
+  "email_risk": "new_domain",
+  "bin_country": "MX",
+  "ip_country": "MX"
+}

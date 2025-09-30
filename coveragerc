@@ -1,0 +1,12 @@
+
+[run]
+branch = True
+source = decision_engine
+omit =
+    tests/*
+    .venv/*
+    */site-packages/*
+
+[report]
+show_missing = True
+skip_covered = False

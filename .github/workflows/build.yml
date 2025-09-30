@@ -1,0 +1,88 @@
+name: CI — Tests, Coverage, SonarQube
+
+on:
+  push:
+    branches: [ "main", "master", "semana_2", "releases/**" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+
+      - name: Run unit tests (pytest + coverage XML + JUnit)
+        run: |
+          pytest
+      - name: Debug coverage files
+        if: always()
+        run: |
+          pwd
+          ls -la
+          echo '--- coverage.xml head ---'
+          if [ -f coverage.xml ]; then head -n 40 coverage.xml; else echo 'coverage.xml not found'; fi
+          echo '--- junit.xml head ---'
+          if [ -f junit.xml ]; then head -n 40 junit.xml; else echo 'junit.xml not found'; fi
+
+      - name: Upload tests reports (artifacts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-reports
+          path: |
+            coverage.xml
+            junit.xml
+            .pytest_cache/
+
+      - name: SonarQube Scan
+        # Official action for SonarQube Server or Cloud
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # For self-hosted SonarQube set a repo/org variable SONAR_HOST_URL (e.g., https://sonarqube.my-domain.com)
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          # ensure coverage/junit paths are picked; can also be set in sonar-project.properties
+          args: >
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.python.xunit.reportPath=junit.xml
+            -Dsonar.verbose=true
+
+      - name: SonarQube Quality Gate
+        if: github.ref == 'refs/heads/main'
+        uses: SonarSource/sonarqube-quality-gate-action@v1.2.0
+        with:
+          pollingTimeoutSec: 600
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+

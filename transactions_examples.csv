@@ -1,0 +1,16 @@
+transaction_id,amount_mxn,customer_txn_30d,geo_state,device_type,chargeback_count,hour,product_type,latency_ms,user_reputation,device_fingerprint_risk,ip_risk,email_risk,bin_country,ip_country
+1,320.0,5,Nuevo León,mobile,0,14,physical,180,recurrent,low,low,low,MX,MX
+2,8500.0,0,Jalisco,desktop,0,23,physical,210,new,medium,medium,new_domain,MX,MX
+3,1490.5,2,CDMX,mobile,0,2,digital,145,recurrent,low,medium,low,MX,US
+4,12000.0,1,Edomex,mobile,1,11,physical,160,new,high,high,high,MX,RU
+5,250.0,12,Veracruz,desktop,0,19,digital,120,trusted,low,low,low,MX,MX
+6,2100.0,0,Puebla,mobile,0,3,subscription,190,new,medium,medium,medium,MX,MX
+7,5200.0,7,Yucatán,desktop,0,9,digital,160,recurrent,low,low,low,MX,MX
+8,399.99,0,Jalisco,mobile,2,1,digital,210,high_risk,high,high,high,MX,MX
+9,1800.0,1,Nuevo León,desktop,0,4,digital,3100,new,low,low,new_domain,MX,MX
+10,6800.0,0,CDMX,mobile,1,22,physical,170,new,medium,high,medium,MX,MX
+11,950.0,3,Jalisco,desktop,0,10,subscription,140,recurrent,low,low,low,MX,MX
+12,4200.0,0,CDMX,mobile,0,0,digital,200,new,low,medium,medium,MX,MX
+13,30000.0,0,Edomex,desktop,0,15,physical,220,new,medium,medium,medium,MX,MX
+14,1200.0,10,Veracruz,mobile,0,21,digital,150,trusted,low,low,low,MX,MX
+15,700.0,0,Puebla,mobile,0,2,digital,180,new,low,high,new_domain,MX,MX
