@@ -218,17 +218,20 @@ def assess_row(row: pd.Series, cfg: Dict[str, Any]) -> Dict[str, Any]:
 
     return {"decision": decision, "risk_score": int(score), "reasons": ";".join(reasons)}
 
+
 def run(input_csv: str, output_csv: str, config: Dict[str, Any] = None) -> pd.DataFrame:
     cfg = config or DEFAULT_CONFIG
     df = pd.read_csv(input_csv)
-    results = []
-    for _, row in df.iterrows():
-        res = assess_row(row, cfg)
-        results.append(res)
+
+    # 💥 Optimización: Aplicamos la función a cada fila
+    results_series = df.apply(lambda row: assess_row(row, cfg), axis=1)
+
+    # Desempaquetamos los resultados en columnas
     out = df.copy()
-    out["decision"] = [r["decision"] for r in results]
-    out["risk_score"] = [r["risk_score"] for r in results]
-    out["reasons"] = [r["reasons"] for r in results]
+    out["decision"] = results_series.apply(lambda r: r["decision"])
+    out["risk_score"] = results_series.apply(lambda r: r["risk_score"])
+    out["reasons"] = results_series.apply(lambda r: r["reasons"])
+
     out.to_csv(output_csv, index=False)
     return out
 
